@@ -1,14 +1,24 @@
 # extract tests from tarballs
 
-# create directory for tests
-testdir <- tempfile('tests_')
-unlink(testdir, recursive = TRUE, force = TRUE)
-dir.create(testdir)
+gettests <- function(tarbs, testDB = NULL) {
+  # create directory for tests if needed
+  if (is.null(testDB)) {
+    testDB <- tempfile('tests_')
+    unlink(testDB, recursive = TRUE, force = TRUE)
+    dir.create(testDB)
+  }
 
-# get package names
-pkgs <- vapply(strsplit(basename(tarbs), "_"), function(X) X[[1]], 'character')
+  # get package names
+  pkgs <- vapply(strsplit(basename(tarbs), "_"), function(X) X[[1]], 'character')
 
-# extract tests
-for (tarb in tarbs) {
-  untar(tarb, files = file.path(unlist(strsplit(basename(tarb), '_'))[1], 'tests'), exdir = testdir)
+  # extract tests
+  tests <- vector('character')
+  for (tarb in tarbs) {
+    newdir <- file.path(testDB, basename(sub('.tar.gz$', '', tarb)))
+    pkg <- strsplit(basename(tarb), '_')[[1]][1]
+    untar(tarb, files = file.path(unlist(strsplit(basename(tarb), '_'))[1], 'tests')
+          , exdir = newdir)
+    tests[pkg] <- file.path(newdir, pkg)
+  }
+  tests
 }
