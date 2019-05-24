@@ -1,11 +1,13 @@
 Package: checkRinstallation
 Type: Package
-Title: What the Package Does (Title Case)
+Title: retrieves, executes, and summarizes tests of an R installation including packages
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Imports: callr, curl
+Authors@R:
+  person("Reinhold", "Koch", email = "8436725+reikoch@users.noreply.github.com", role = c("aut", "cre"))
+Description: Using open source infrastructure on the internet an attempt is made
+  to streamline testing R and the installed packages and provide a decent summary.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.1.1

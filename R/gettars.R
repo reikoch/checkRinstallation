@@ -1,18 +1,27 @@
 # download tarballs of all installed packages
 # TODO: whatif current active repos do not provide all tarballs?
 
-library(remotes)
-
+#' retrieve source tarballs of installed packages
+#'
+#' @param pkgs  matrix of package names and versions
+#' @param srcDB directory where all source tarballs are collected
+#'
+#' @return vector of 
+#' @export
+#'
+#' @examples
+#'   tarbs <- gettars()
 gettars <- function(pkgs = NULL, srcDB = tempfile('pkgs_')) {
   # find sources for all installed packages
   if (is.null(pkgs)) {
-    pkgs <- installed.packages()[is.na(i[,'Priority']) | i[,'Priority'] != 'base'
-                                 , c('Package','Version')]
+    pkgs <- utils::installed.packages()
+    pkgs <- pkgs[is.na(pkgs[,'Priority']) | pkgs[,'Priority'] != 'base'
+                 , c('Package','Version')]
   }
   # if (is.null(srcDB)) srcDB <-
 
   # TODO: announce packages where no sources were found
-  pkgsrc <- merge(pkgs, available_packages()[, c('Package', 'Repository')])
+  pkgsrc <- merge(pkgs, utils::available.packages()[, c('Package', 'Repository')])
 
   # retrieve tarball from repo, in second attempt from repo/Archive
   getsrc <- function(pkg, version, repo, destdir) {
@@ -22,6 +31,7 @@ gettars <- function(pkgs = NULL, srcDB = tempfile('pkgs_')) {
     }
     # TODO: check for potential failures here
     curl::curl_download(fi, file.path(destdir, basename(fi)))
+    fi
   }
 
   # create download directory and do it
